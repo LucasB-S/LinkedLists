@@ -2,123 +2,129 @@
 
 int main()
 {
-#pragma region Print&PushBackTest
+#pragma region Print,PushBack,PopBack & GetLength Test
 
-	std::cout << "Print & PushBack Test:" << std::endl;
-	LinkedList<int> PrintandPushBackTest;
+	std::cout << "Print,PushBack,PopBack & GetLength Test:" << std::endl;
+	LinkedList<int> IntList;
 
 	// Should return and empty line
-	PrintandPushBackTest.PrintList();
+	IntList.PrintList();
 
-	PrintandPushBackTest.PushBack(1);
+	IntList.PushBack(1);
 
-	PrintandPushBackTest.PrintList();
+	IntList.PrintList();
 
-	PrintandPushBackTest.PushBack(2);
+	IntList.PushBack(2);
 
-	PrintandPushBackTest.PrintList();
+	IntList.PrintList();
 
-	PrintandPushBackTest.PushBack(3);
+	IntList.PushBack(3);
 
-	PrintandPushBackTest.PrintList();
+	IntList.PrintList();
 
-	PrintandPushBackTest.~LinkedList();
+	IntList.PopBack();
+
+	IntList.PrintList();
+
+	std::cout << "List Length: " << IntList.GetLength() << std::endl;
+
+	IntList.~LinkedList();
 
 	std::cout << std::endl;
 
 #pragma endregion
 
-#pragma region RemoveAtTest
+#pragma region RemoveAt Test
 
 	std::cout << "Remove Test:" << std::endl;
-	LinkedList<std::string> RemoveTest;
+	LinkedList<std::string> StringList;
 
-	RemoveTest.PushBack("1");
-	RemoveTest.PushBack("2");
-	RemoveTest.PushBack("3");
-	RemoveTest.PrintList();
+	StringList.PushBack("1");
+	StringList.PushBack("2");
+	StringList.PushBack("3");
+	StringList.PrintList();
 
 	// Test for our of range
 	std::cout << "Should print error message:" << std::endl;
-	RemoveTest.RemoveAt(5);
+	StringList.RemoveAt(5);
 
 	// Test for removing first element
-	RemoveTest.RemoveAt(0);
+	StringList.RemoveAt(0);
 	std::cout << "(1) should be removed from 1,2,3:" << std::endl;
-	RemoveTest.PrintList();
+	StringList.PrintList();
 
-	RemoveTest.PushBack("4");
+	StringList.PushBack("4");
 
 	// Test for removing last element
-	RemoveTest.RemoveAt(2);
+	StringList.RemoveAt(2);
 	std::cout << "(4) should be removed from 2,3,4:" << std::endl;
-	RemoveTest.PrintList();
+	StringList.PrintList();
 
-	RemoveTest.PushBack("4");
+	StringList.PushBack("4");
 
 	// Test for removing middle element
-	RemoveTest.RemoveAt(1);
+	StringList.RemoveAt(1);
 	std::cout << "(3) should be removed from 2,3,4:" << std::endl;
-	RemoveTest.PrintList();
+	StringList.PrintList();
 
-	RemoveTest.~LinkedList();
+	StringList.~LinkedList();
 
 	std::cout << std::endl;
 
 #pragma endregion
 
-#pragma region Get&SetDataTest
+#pragma region Get & SetData Test
 
 	std::cout << "Get & Set Data Test:" << std::endl;
-	LinkedList<float> GetandSetDataTest;
+	LinkedList<float> FloatList;
 
-	GetandSetDataTest.PushBack(0.1);
-	GetandSetDataTest.PushBack(1.2);
-	GetandSetDataTest.PushBack(0.3);
+	FloatList.PushBack(0.1);
+	FloatList.PushBack(1.2);
+	FloatList.PushBack(0.3);
 
-	GetandSetDataTest.PrintList();
+	FloatList.PrintList();
 
 	int idx = 1;
 
-	GetandSetDataTest.SetData(0.2, idx);
+	FloatList.SetData(0.2, idx);
 
-	float data = GetandSetDataTest.GetData(idx);
+	float data = FloatList.GetData(idx);
 
 	std::cout << data << std::endl;
 
 	//Test for Get out of range
-	GetandSetDataTest.SetData(1.234, 5);
+	FloatList.SetData(1.234, 5);
 
-	data = GetandSetDataTest.GetData(5);
+	data = FloatList.GetData(5);
 
 	std::cout << "Should be default value or empty" << std::endl;
 	std::cout << data << std::endl;
 
-	GetandSetDataTest.~LinkedList();
+	FloatList.~LinkedList();
 
 	std::cout << std::endl;
 #pragma endregion
 
-#pragma region IteratorTest
+#pragma region Iterator Test
 
 	std::cout << "Iterator Test:" << std::endl;
-	LinkedList<bool> IteratorTest;
+	LinkedList<bool> BoolList;
 
-	IteratorTest.PushBack(true); 
-	IteratorTest.PushBack(false); 
-	IteratorTest.PushBack(true); 
+	BoolList.PushBack(true); 
+	BoolList.PushBack(false); 
+	BoolList.PushBack(true); 
 	
-	for (LinkedList<bool>::Iterator it = IteratorTest.begin(); it != IteratorTest.end(); ++it)  
+	for (LinkedList<bool>::Iterator it = BoolList.begin(); it != BoolList.end(); ++it)  
 		std::cout << *it << " "; 
 
 	std::cout << std::endl;
 
-	IteratorTest.PushBack(false); 
+	BoolList.PushBack(false); 
 
-	for (LinkedList<bool>::Iterator it = IteratorTest.begin(); it != IteratorTest.end(); ++it)
+	for (LinkedList<bool>::Iterator it = BoolList.begin(); it != BoolList.end(); ++it)
 		std::cout << *it << " ";
 
-	IteratorTest.~LinkedList();
+	BoolList.~LinkedList();
 
 	std::cout << std::endl;
 
