@@ -15,9 +15,15 @@ private:
 		T data;
 		Node* next;
 
-		Node(const T data) : data(data), next(nullptr) {}
+		Node() : data(T()), next(nullptr) {}
 		~Node() {};
+
+		Node(const T data) : data(data), next(nullptr) {}
 	};
+
+	Node* m_head;
+
+public:
 
 	class Iterator
 	{
@@ -31,52 +37,71 @@ private:
 		Iterator(Node* node) : m_node(node) {}
 		~Iterator() {}
 
-		Iterator operator ++ ();
-		T operator * ();
-		bool operator != (Iterator other);
-		bool operator == (Iterator other);
+		T& operator* () const;
+		Iterator& operator++ ();
+		bool operator != (const Iterator& other) const;
+		bool operator == (const Iterator& other) const;
 
 	};
 
-	Node* m_head;
-
-public:
-
+	LinkedList() : m_head(nullptr) {}
+	~LinkedList();
 	LinkedList(const T data) : m_head(new Node(data)) {}
-	~LinkedList() {}
 
-	Iterator Begin() { return Iterator(m_head); }
-	Iterator End() { return Iterator(nullptr); }
+	Iterator begin() { return Iterator(m_head); }
+	Iterator end() { return Iterator(nullptr); }
 
 	void PushBack(const T data);
-
 	void RemoveAt(int idx);
 
 	T GetData(int idx);
-
 	void SetData(const T data, int idx);
+
+	void PrintList();
 };
 
 #pragma region IteratorDef
 
 template<typename T>
-typename LinkedList<T>::Iterator LinkedList<T>::Iterator::operator ++ () { m_node = m_node.next; return m_node; }
+T& LinkedList<T>::Iterator::operator * () const { return m_node->data; }
 
 template<typename T>
-T LinkedList<T>::Iterator::operator * () { return m_node.data; }
+typename LinkedList<T>::Iterator& LinkedList<T>::Iterator::operator ++ () { m_node = m_node->next; return *this; }
 
 template<typename T>
-bool LinkedList<T>::Iterator::operator != (Iterator other) { return m_node != other.m_node; }
+bool LinkedList<T>::Iterator::operator != (const Iterator& other) const { return m_node != other.m_node; }
 
 template<typename T>
-bool LinkedList<T>::Iterator::operator == (Iterator other) { return m_node == other.m_node; }
+bool LinkedList<T>::Iterator::operator == (const Iterator& other) const { return m_node == other.m_node; }
 
 #pragma endregion
 
 #pragma region LinkedListDef
 template<typename T>
+LinkedList<T>::~LinkedList() 
+{
+	Node* current = m_head;
+
+	while (current != nullptr) 
+	{
+		Node* next = current->next;
+		delete current;
+		current = next;
+	}
+
+	m_head = nullptr; // Just to be safe
+}
+
+template<typename T>
 void LinkedList<T>::PushBack(const T data)
 {
+	if (m_head == nullptr) 
+	{
+		m_head = new Node(data); 
+		return; 
+	}
+
+
 	Node* newNode = m_head;
 
 	while (newNode->next != nullptr)
@@ -87,65 +112,45 @@ void LinkedList<T>::PushBack(const T data)
 	newNode->next = new Node(data);
 }
 
-/**
-idx - The index where the element you want to delete is stored. Not position!!!
-*/
 template<typename T>
 void LinkedList<T>::RemoveAt(int idx)
 {
-	Node* prevNode = m_head;
+	Node* node = m_head;
 
 	// If removing head
 	if (idx == 0)
 	{
-		m_head = prevNode->next;
+		m_head = node->next;
 
-		delete prevNode;
-		prevNode = nullptr;
+		delete node;
+		node = nullptr;
 
 		return;
 	}
 
-	int count = 0;
-
-	for (; count < (idx - 1); count++)
+	for (int i = 0; i < (idx - 1); i++)
 	{
 
-		if (prevNode->next == nullptr)
+		if (node->next == nullptr)
 		{
-			if (idx == count) // If removing last element
+			if (idx == i) // If removing last element
 			{
-				delete prevNode->next;
-				prevNode->next = nullptr;
+				delete node->next;
+				node->next = nullptr;
 				return;
 			}
-			if (idx > count) // If idx is out of range of list
+			if (idx > i) // If idx is out of range of list
 			{
-				std::cout << "Index passed in is out of range of list" << std::endl;
+				std::cout << "Could not remove data. Index Out Of Range" << std::endl;
 				return;
 			}
 		}
 
-		// If removing last element
-		if (prevNode->next == nullptr && idx == count)
-		{
-			delete prevNode->next;
-			prevNode->next = nullptr;
-			return;
-		}
-
-		// If idx is out of range of list
-		if (prevNode->next == nullptr && idx > count)
-		{
-			std::cout << "Index passed in is out of range of list" << std::endl;
-			return;
-		}
-
-		prevNode = prevNode->next;
+		node = node->next;
 
 	}
 
-	prevNode->next = prevNode->next->next;
+	node->next = node->next->next;
 }
 
 template<typename T>
@@ -156,7 +161,10 @@ T LinkedList<T>::GetData(int idx)
 	for (int i = 0; i < idx; i++)
 	{
 		if (node->next == nullptr)
-			exit;
+		{
+			std::cout << "Could not get data. Index Out Of Range" << std::endl;
+			return T();
+		}
 
 		node = node->next;
 	}
@@ -164,9 +172,6 @@ T LinkedList<T>::GetData(int idx)
 	return node->data;
 }
 
-/**
-Set data in node stored at idx
-*/
 template<typename T>
 void LinkedList<T>::SetData(const T data, int idx)
 {
@@ -175,11 +180,29 @@ void LinkedList<T>::SetData(const T data, int idx)
 	for (int i = 0; i < idx; i++)
 	{
 		if (node->next == nullptr)
-			exit;
+		{
+			std::cout << "Could not set data. Index Out Of Range" << std::endl;
+			return;
+		}
 
 		node = node->next;
 	}
 
 	node->data = data;
 }
+
+template<typename T>
+void LinkedList<T>::PrintList()
+{
+	Node* node = m_head; 
+	
+	while (node != nullptr) 
+	{ 
+		std::cout << node->data << " ";
+		node = node->next; 
+	}
+
+	std::cout << std::endl;
+}
+
 #pragma endregion
